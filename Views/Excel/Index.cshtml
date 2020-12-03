@@ -1,0 +1,89 @@
+﻿@using PagedList;
+@using PagedList.Mvc
+
+@model PagedList.IPagedList<MvcExcel.Models.ZipCode>
+
+
+<!--點選上傳檔案按鈕後POST到後端的Uploads的Action-->
+@using (Html.BeginForm("Uploads", "Excel", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <br>
+    <div class="uploads">
+        <input type="file" id="upload_file" name="file" />
+        <br>
+        <button type="submit" id="upload_button" class="btn btn-primary">上傳檔案</button>
+    </div>
+}
+<br>
+<div class="remote_file_path">
+    <label class="remote_file_path_label ">Remote File Path:</label>
+    <span class="form-control" id="remote_file_path">@ViewBag.path</span>
+</div>
+<br>
+@using (Html.BeginForm("Downloads", "Excel", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="download_button">
+        <button class="btn btn-primary" id="download_button">下載檔案</button>
+    </div>
+}
+<br>
+<!--點選匯入檔案按鈕後POST到後端的Imports的Action-->
+@using (Html.BeginForm("Imports", "Excel", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="import_button">
+        <button class="btn btn-primary" id="import_button">匯入檔案</button>
+    </div>
+}
+
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+
+<table class="table table-striped table-bordered">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Zip)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().City)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Town)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Sequence)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Zip)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Town)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sequence)
+            </td>
+
+        </tr>
+    }
+
+</table>
+@if (TempData["message"] != null)
+{
+    <script type="text/javascript">
+        var message = @Html.Raw(Json.Encode(TempData["message"]));
+        alert(message);
+    </script>
+}
